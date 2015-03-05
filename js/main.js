@@ -3,43 +3,46 @@ function series( json ) {
   //set size to number of series in json
   chooser.size = json.length;
   //fill selection list (chooser) with series as defined in json
-  for ( var i = 0; i < json.length; i++ ) {
-    chooser.options[i] = new Option( "text", json[i]['Series'] );
+  var i = 0;
+  for ( var seriesKey in json ) {
+    chooser.options[i] = new Option( "text", seriesKey );
+    i++;
   }
 
   //after click on button
-  document.getElementById( "seriesbutton" ).onclick = function(e) {
-    var opts = getSelectedOptions( chooser );
-    //alert( 'The number of options selected is: ' + opts.length );
-    var episode = getRandomEpisode( opts, json );
-    alert ("I choose you episode " + episode)
-    //var yay = $( '#serieslist' ).find( ":selected" ).val();
-    //alert(yay);
+  document.getElementById( "seriesbutton" ).onclick = function( e ) {
+    var selectedValues = getSelectedOptions( chooser );
+    //get random episode ID
+    var episode = getRandomEpisode( selectedValues, json );
+    //add episode to suggestedEpisode div
+    var sediv = document.getElementById('suggestedEpisode');
+    sediv.innerHTML = sediv.innerHTML + episode;
   };
 }
 
 //function to get an array of all selected options
-function getSelectedOptions( sel ) {
-  var opts = [],
-    opt;
+function getSelectedOptions( chooser ) {
+  var selectedValues = [],
+    value;
   // loop through options in select list
-  for ( var i=0, len=sel.options.length; i < len; i++ ) {
-    opt = sel.options[i];
+  for ( var i=0, len=chooser.options.length; i < len; i++ ) {
+    value = chooser.options[i];
     // check if selected
-    if ( opt.selected ) {
+    if ( value.selected && value.value ) {
       // add to array of option elements to return from this function
-      opts.push( opt );
+      selectedValues.push( value.value );
     }
   }
   // return array containing references to selected option elements
-  return opts;
+  return selectedValues;
 }
 
 //function to get the id of an random episode
-function getRandomEpisode( opts, json ) {
-  var series = opts[Math.floor(Math.random()*opts.length)];
-  alert(opts[1]);
+function getRandomEpisode( selectedValues, json ) {
+  //get one random series from the selected series
+  var series = selectedValues[Math.floor( Math.random() * selectedValues.length )];
   var episodes = json[series]['Episodes'];
-  var episode = episodes[Math.floor(Math.random()*episodes.length)];
+  //get one random episode from the series defined before
+  var episode = episodes[Math.floor( Math.random() * episodes.length )];
   return episode;
 }
