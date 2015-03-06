@@ -72,7 +72,16 @@ function outputLabel( series, episode ) {
         var descriptionDiv = document.getElementById('description');
         descriptionDiv.innerHTML = "";
       }
-      //var episodeTitelDiv = document.getElementById('imageEpisode');
+      if (results['entities'][series]['claims'] && results['entities'][series]['claims']['P18']) {
+        document.getElementById('img').innerHTML = "";
+        var imageTitel = results['entities'][series]['claims']['P18'][0]['mainsnak']['datavalue']['value'];
+        imageTitel = imageTitel.split(' ').join('%20')
+        imgSrc = "https://commons.wikimedia.org/w/thumb.php?f=" + imageTitel + "&w=400";
+        $('#img').prepend('<img id="theImg" src=' + imgSrc + ' />')
+      }
+      else {
+        document.getElementById('img').innerHTML = "";
+      }
     }
   });
 }
