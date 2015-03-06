@@ -1,27 +1,31 @@
 function series( json ) {
+
+  clickWithoutCtrl();
+
   var chooser = document.getElementById( 'serieslist' );
   //set size to number of series in json
   chooser.size = json.length;
-  //fill selection list (chooser) with series as defined in json
-  var i = 0;
+
+  //go over json and fill entityIds of series into array
   var seriesArray = []
   for ( var seriesKey in json ) {
     seriesArray.push(seriesKey);
-    //chooser.options[i] = new Option( "text", seriesKey );
-    //i++;
   }
   outputSeriesTitel( seriesArray, chooser );
 
   //after click on button
   document.getElementById( "seriesbutton" ).onclick = function( e ) {
     var selectedValues = getSelectedOptions( chooser );
-    //get random episode ID
-    var series = getRandomSeries( selectedValues, json )
-    var episode = getRandomEpisode( series, json );
-    outputLabel( series, episode );
+    if (selectedValues != "") {
+      //get random episode ID
+      var series = getRandomSeries( selectedValues, json )
+      var episode = getRandomEpisode( series, json );
+      outputLabel( series, episode );
+    }
   };
 }
 
+//function to set the options and labels for the selection
 function outputSeriesTitel( seriesArray, chooser ) {
   urlSeries = "https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=" + seriesArray[0];
   for( var i = 1; i < seriesArray.length; i++) {
@@ -52,6 +56,9 @@ function getSelectedOptions( chooser ) {
       // add to array of option elements to return from this function
       selectedValues.push( value.value );
     }
+  }
+  if (selectedValues.length <= 0) {
+    return "";
   }
   // return array containing references to selected option elements
   return selectedValues;
@@ -109,4 +116,24 @@ function outputLabel( series, episode ) {
       }
     }
   });
+}
+
+function clickWithoutCtrl() {
+  $('select').bind("click", function (event, target) {
+
+       event.preventDefault();
+       var CurrentIndex = event.target.selectedIndex==undefined? $(event.target).index(): event.target.selectedIndex
+       var CurrentOption = $("option:eq(" + CurrentIndex+ ")", $(this));
+       if ($(CurrentOption).attr('data-selected') == undefined || $(CurrentOption).attr('data-selected') == 'false') {
+           $(CurrentOption).attr('data-selected', true);
+       }
+       else {
+           $(CurrentOption).prop('selected', false).attr('data-selected', false);
+       }
+
+       $("option", $(this)).not(CurrentOption).each(function (Index, OtherOption) {
+           $(OtherOption).prop('selected', ($(OtherOption).attr('data-selected') == 'true') ? true : false);
+       });
+        return false;
+   });
 }
