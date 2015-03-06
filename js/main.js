@@ -13,10 +13,9 @@ function series( json ) {
   document.getElementById( "seriesbutton" ).onclick = function( e ) {
     var selectedValues = getSelectedOptions( chooser );
     //get random episode ID
-    var episode = getRandomEpisode( selectedValues, json );
-    //add episode to suggestedEpisode div
-    var sediv = document.getElementById('suggestedEpisode');
-    sediv.innerHTML = sediv.innerHTML + episode;
+    var series = getRandomSeries( selectedValues, json )
+    var episode = getRandomEpisode( series, json );
+    outputLabel( series, episode );
   };
 }
 
@@ -37,12 +36,33 @@ function getSelectedOptions( chooser ) {
   return selectedValues;
 }
 
-//function to get the id of an random episode
-function getRandomEpisode( selectedValues, json ) {
+//function to get the id of a random episode
+function getRandomSeries( selectedValues, json ) {
   //get one random series from the selected series
   var series = selectedValues[Math.floor( Math.random() * selectedValues.length )];
+  return series;
+}
+
+//function to get the id of an random episode
+function getRandomEpisode( series, json ) {
   var episodes = json[series]['Episodes'];
   //get one random episode from the series defined before
   var episode = episodes[Math.floor( Math.random() * episodes.length )];
   return episode;
+}
+
+//connects to the Wikidata API to get the label for a given EntityID
+function outputLabel( series, episode ) {
+  $.ajax({
+    url: "http://www.wikidata.org/w/api.php?action=wbgetentities&ids=" + series + "|" + episode + "&format=json",
+    dataType: 'jsonp',
+    success: function(results){
+      var labelSeries = results['entities'][series]['labels']['en']['value'];
+      var labelEpisode = results['entities'][episode]['labels']['en']['value'];
+      //add episode to suggestedEpisode div
+      var sediv = document.getElementById('suggestedEpisode');
+      sediv.innerHTML = "";
+      sediv.innerHTML = labelSeries + ": " + labelEpisode;
+    }
+  });
 }
