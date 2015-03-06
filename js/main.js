@@ -56,19 +56,23 @@ function outputLabel( series, episode ) {
   $.ajax({
     url: "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=" + series + "|" + episode + "&format=json",
     dataType: 'jsonp',
-    success: function(results){
-      var labelSeries = results['entities'][series]['labels']['en']['value'];
+    success: function( results ){
       var labelEpisode = results['entities'][episode]['labels']['en']['value'];
-      var description = results['entities'][episode]['descriptions']['en']['value'];
-      //add episode to suggestedEpisode div
-      var seriesTitelDiv = document.getElementById('suggestedSeries');
       var episodeTitelDiv = document.getElementById('suggestedEpisode');
-      var descriptionDiv = document.getElementById('description');
-      //var episodeTitelDiv = document.getElementById('imageEpisode');
-      seriesTitelDiv.innerHTML = "";
-      seriesTitelDiv.innerHTML = labelSeries;
       episodeTitelDiv.innerHTML = labelEpisode;
-      descriptionDiv.innerHTML = description;
+      var labelSeries = results['entities'][series]['labels']['en']['value'];
+      var seriesTitelDiv = document.getElementById('suggestedSeries');
+      seriesTitelDiv.innerHTML = labelSeries;
+      if ( results['entities'][episode]['descriptions'] && results['entities'][episode]['descriptions']['en'] ) {
+        var description = results['entities'][episode]['descriptions']['en']['value'];
+        var descriptionDiv = document.getElementById('description');
+        descriptionDiv.innerHTML = description;
+      }
+      else {
+        var descriptionDiv = document.getElementById('description');
+        descriptionDiv.innerHTML = "";
+      }
+      //var episodeTitelDiv = document.getElementById('imageEpisode');
     }
   });
 }
