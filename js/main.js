@@ -54,7 +54,7 @@ function getRandomEpisode( series, json ) {
 //connects to the Wikidata API to get the label for a given EntityID
 function outputLabel( series, episode ) {
   $.ajax({
-    url: "http://www.wikidata.org/w/api.php?action=wbgetentities&ids=" + series + "|" + episode + "&format=json",
+    url: "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=" + series + "|" + episode + "&format=json",
     dataType: 'jsonp',
     success: function(results){
       var labelSeries = results['entities'][series]['labels']['en']['value'];
