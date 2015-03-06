@@ -36,12 +36,13 @@ h2 {
 
 #suggested {
   background-color: #B0B0B0;
+  margin-top: 110px;
+  margin-bottom: 60px;
   margin-right: 100px;
   margin-left: 100px;
 }
 
 #suggestedEpisode {
-  margin-top: 110px;
 }
 
 #suggestedSeries {
