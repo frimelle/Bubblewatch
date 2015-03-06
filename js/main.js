@@ -59,10 +59,16 @@ function outputLabel( series, episode ) {
     success: function(results){
       var labelSeries = results['entities'][series]['labels']['en']['value'];
       var labelEpisode = results['entities'][episode]['labels']['en']['value'];
+      var description = results['entities'][episode]['descriptions']['en']['value'];
       //add episode to suggestedEpisode div
-      var sediv = document.getElementById('suggestedEpisode');
-      sediv.innerHTML = "";
-      sediv.innerHTML = labelSeries + ": " + labelEpisode;
+      var seriesTitelDiv = document.getElementById('suggestedSeries');
+      var episodeTitelDiv = document.getElementById('suggestedEpisode');
+      var descriptionDiv = document.getElementById('description');
+      //var episodeTitelDiv = document.getElementById('imageEpisode');
+      seriesTitelDiv.innerHTML = "";
+      seriesTitelDiv.innerHTML = labelSeries;
+      episodeTitelDiv.innerHTML = labelEpisode;
+      descriptionDiv.innerHTML = description;
     }
   });
 }
