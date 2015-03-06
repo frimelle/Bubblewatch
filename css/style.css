@@ -1,0 +1,55 @@
+body {
+  background: #D3D3D3;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+h1 {
+  padding-top: 10px;
+  margin-top: 50px;
+  margin-left: 500px;
+  margin-right: 500px;
+  font-size: 50px;
+  border: 1px solid black;
+}
+
+#explain {
+  font-size: 20px;
+  color: #7F7F7F;
+}
+
+#choosing {
+  padding-top: 35px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+#serieslist {
+  font-size: 20px;
+}
+
+
+#seriesbutton {
+ margin-top: 10px;
+}
+
+#suggestedEpisode {
+  margin-top: 110px;
+}
+
+#suggestedSeries {
+  font-size: 23px;
+  color: #7F7F7F;
+}
+
+#description {
+  font-size: 18px;
+}
+
+#footer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  font-size: 16px;
+}
