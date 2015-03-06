@@ -47,6 +47,10 @@ h2 {
   font-size: 18px;
 }
 
+#img {
+  margin-top: 50px;
+}
+
 #footer {
   position: fixed;
   bottom: 10px;
