@@ -4,10 +4,13 @@ function series( json ) {
   chooser.size = json.length;
   //fill selection list (chooser) with series as defined in json
   var i = 0;
+  var seriesArray = []
   for ( var seriesKey in json ) {
-    chooser.options[i] = new Option( "text", seriesKey );
-    i++;
+    seriesArray.push(seriesKey);
+    //chooser.options[i] = new Option( "text", seriesKey );
+    //i++;
   }
+  outputSeriesTitel( seriesArray, chooser );
 
   //after click on button
   document.getElementById( "seriesbutton" ).onclick = function( e ) {
@@ -17,6 +20,24 @@ function series( json ) {
     var episode = getRandomEpisode( series, json );
     outputLabel( series, episode );
   };
+}
+
+function outputSeriesTitel( seriesArray, chooser ) {
+  urlSeries = "https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=" + seriesArray[0];
+  for( var i = 1; i < seriesArray.length; i++) {
+    urlSeries = urlSeries + "|" + seriesArray[i];
+  }
+  $.ajax({
+    url: urlSeries,
+    dataType: 'jsonp',
+    success: function( results ){
+      for( var i = 0; i < seriesArray.length; i++) {
+        var labelSeries = results['entities'][seriesArray[i]]['labels']['en']['value'];
+        chooser.options[i] = new Option( labelSeries, seriesArray[i] );
+      }
+    }
+  })
+
 }
 
 //function to get an array of all selected options
@@ -57,21 +78,25 @@ function outputLabel( series, episode ) {
     url: "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=" + series + "|" + episode + "&format=json",
     dataType: 'jsonp',
     success: function( results ){
+      //add label of episode to html
       var labelEpisode = results['entities'][episode]['labels']['en']['value'];
       var episodeTitelDiv = document.getElementById('suggestedEpisode');
       episodeTitelDiv.innerHTML = labelEpisode;
+      //add label of series to html
       var labelSeries = results['entities'][series]['labels']['en']['value'];
       var seriesTitelDiv = document.getElementById('suggestedSeries');
       seriesTitelDiv.innerHTML = labelSeries;
+      //add description to html if exists else clear div
       if ( results['entities'][episode]['descriptions'] && results['entities'][episode]['descriptions']['en'] ) {
+        document.getElementById('description').innerHTML = "";
         var description = results['entities'][episode]['descriptions']['en']['value'];
         var descriptionDiv = document.getElementById('description');
         descriptionDiv.innerHTML = description;
       }
       else {
-        var descriptionDiv = document.getElementById('description');
-        descriptionDiv.innerHTML = "";
+        document.getElementById('description').innerHTML = "";
       }
+      //add image to html if exists else clear div
       if (results['entities'][series]['claims'] && results['entities'][series]['claims']['P18']) {
         document.getElementById('img').innerHTML = "";
         var imageTitel = results['entities'][series]['claims']['P18'][0]['mainsnak']['datavalue']['value'];
